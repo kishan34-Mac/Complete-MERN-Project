@@ -2,7 +2,7 @@ const userModel = require("../models/user.model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-// Dummy placeholder for loginUser - implement separately
+ 
 async function loginUser(req, res) {
   // login logic here...
 }
@@ -24,7 +24,7 @@ async function registerUser(req, res) {
     });
     const token = jwt.sign(
       { id: user._id },
-      "ef0cac68dcdfa2767144eb951ce103ae" // Ideally, use process.env.JWT_SECRET
+      "ef0cac68dcdfa2767144eb951ce103ae"  
     );
     // Add httpOnly option for security in production
     res.cookie("token", token, { httpOnly: true });
