@@ -4,7 +4,26 @@ const jwt = require("jsonwebtoken");
 
  
 async function loginUser(req, res) {
-  // login logic here...
+    const {email,password}=req.bosy;
+    const user = await userModel.findOne({
+        email
+    })
+    if (!user){
+        return res.status(400).json({
+            message:"Invalid E-mail or password"
+        })
+    }
+    const isPasswordValid= await bcrypt.compare(password,user.password);
+    if (!isPasswordValid){
+        return res.status(400).json({
+            message:"Invalid E-mail or password"
+        })
+    }
+    const token =jwt.sign({
+        id:user._id,
+
+    },"ef0cac68dcdfa2767144eb951ce103ae")
+    res.cookie("token",token)
 }
 
 async function registerUser(req, res) {
