@@ -1,6 +1,6 @@
 const userModel = require("../models/user.model");
 const bcryt = require("bcryptjs");
-const jwt =require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
 
 async function registerUser(req, res) {
   const { fullName, email, password } = req.body;
@@ -18,9 +18,22 @@ async function registerUser(req, res) {
     fullName,
     email,
     password: hashedPassword,
-  })
-  const token =jwt.sign({
-    id:user._id,
-  },"ef0cac68dcdfa2767144eb951ce103ae")
-  res.cookie("token",token)
+  });
+  const token = jwt.sign(
+    {
+      id: user._id,
+    },
+    "ef0cac68dcdfa2767144eb951ce103ae"
+  );
+  res.cookie("token", token);
+  res.status(201).json({
+    message: "User register successfully",
+    user: {
+      _id: user._id,
+      email: user.email,
+      fullName: user.fullName,
+    },
+  });
 }
+
+module.exports = { loginuser, registerUser };
