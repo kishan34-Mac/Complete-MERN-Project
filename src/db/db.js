@@ -7,7 +7,7 @@ function connectDB() {
       serverSelectionTimeoutMS: 10000 // optional: increases waiting time
     })
     .then(() => {
-      console.log("Mongoose is connected");
+      console.log("👍Mongoose is connected");
     })
     .catch((err) => {
       console.error("MongoDB is not connected:", err.message);
