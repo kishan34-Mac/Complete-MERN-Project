@@ -22,34 +22,36 @@ const { v4: uuid } = require("uuid");
 async function createFood(req, res) {
   try {
     if (!req.file) {
-      return res
-        .status(400)
-        .json({ success: false, error: "No file uploaded" });
+      return res.status(400).json({ success: false, error: "No file uploaded" });
     }
 
-    const fileUploadResult = await storageService.uploadFile(
-      req.file.buffer,
-      uuid()
-    );
+    const fileUploadResult = await storageService.uploadFile(req.file.buffer, uuid());
+
+    // Create food item in DB
+    const foodItem = await foodModel.create({
+      name: req.body.name,
+      description: req.body.description, // fixed typo from descripton
+      video: fileUploadResult.url,
+      foodPartner: req.foodPartner._id
+    });
+
     console.log(fileUploadResult);
 
+    // Send a single response with all needed info
     return res.status(201).json({
       success: true,
-      message: "Food item created",
-      videoUrl: fileUploadResult.url,
+      message: "Food item created successfully",
+      food: foodItem,
+      videoUrl: fileUploadResult.url
     });
+
   } catch (err) {
     console.error("CreateFood Error:", err);
 
-    // Check for authentication error from ImageKit or storage service
-    if (
-      err.message &&
-      err.message.toLowerCase().includes("cannot be authenticated")
-    ) {
+    if (err.message && err.message.toLowerCase().includes("cannot be authenticated")) {
       return res.status(401).json({
         success: false,
-        error:
-          "Storage service authentication failed. Please check your API credentials.",
+        error: "Storage service authentication failed. Please check your API credentials."
       });
     }
 
