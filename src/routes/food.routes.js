@@ -2,17 +2,15 @@ const express = require("express");
 const router = express.Router();
 const foodController = require("../controllers/food.controller");
 const authMiddleware = require("../middlewares/auth.middleware");
-const multer= require('multer')
+const multer = require("multer");
 
-//upload file
-const upload =multer({
-    storage:multer.memoryStorage()
-})
+// Use memory storage (for req.file.buffer)
+const upload = multer({ storage: multer.memoryStorage() });
 
-// POST /api/food
 router.post(
   "/",
-  authMiddleware.authFoodPartnerMiddleware,upload.single("video"),
+  authMiddleware.authFoodPartnerMiddleware,
+  upload.single("video"), // 'video' must match your Postman file key
   foodController.createFood
 );
 
